@@ -24,8 +24,8 @@ func addTestRunnerUser() {
 	}
 
 	dbConnect()
-	defer db.Mysql.Db.Close()
-	if err := db.Mysql.Insert(testRunnerUser); err != nil {
+	defer db.Sql.Db.Close()
+	if err := db.Sql.Insert(testRunnerUser); err != nil {
 		panic(err)
 	}
 	addToken(adminToken, testRunnerUser.ID)
@@ -33,7 +33,7 @@ func addTestRunnerUser() {
 
 func removeTestRunnerUser(transactions []*transaction.Transaction) {
 	dbConnect()
-	defer db.Mysql.Db.Close()
+	defer db.Sql.Db.Close()
 	deleteToken(adminToken, testRunnerUser.ID)
 	deleteObject(testRunnerUser)
 }
@@ -46,13 +46,13 @@ func setupObjectsAndPaths(t *transaction.Transaction) {
 
 // Object Lifecycle
 func addUserProjectRelation(pid int, user int) {
-	_, err := db.Mysql.Exec("insert into project__user set project_id=?, user_id=?, `admin`=1", pid, user)
+	_, err := db.Sql.Exec("insert into project__user set project_id=?, user_id=?, `admin`=1", pid, user)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 func deleteUserProjectRelation(pid int, user int) {
-	_, err := db.Mysql.Exec("delete from project__user where project_id=? and user_id=?", strconv.Itoa(pid), strconv.Itoa(user))
+	_, err := db.Sql.Exec("delete from project__user where project_id=? and user_id=?", strconv.Itoa(pid), strconv.Itoa(user))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -67,7 +67,7 @@ func addAccessKey(pid *int) *db.AccessKey {
 		Secret:	   &secret,
 		ProjectID: pid,
 	}
-	if err := db.Mysql.Insert(&key); err != nil {
+	if err := db.Sql.Insert(&key); err != nil {
 		fmt.Println(err)
 	}
 	return &key
@@ -79,7 +79,7 @@ func addProject() *db.Project {
 		Name:    "ITP-" + uid,
 		Created: time.Now(),
 	}
-	if err := db.Mysql.Insert(&project); err != nil {
+	if err := db.Sql.Insert(&project); err != nil {
 		fmt.Println(err)
 	}
 	return &project
@@ -92,7 +92,7 @@ func addUser() *db.User {
 		Username: "ITU-" + uid,
 		Email:    "test@semaphore." + uid,
 	}
-	if err := db.Mysql.Insert(&user); err != nil {
+	if err := db.Sql.Insert(&user); err != nil {
 		fmt.Println(err)
 	}
 	return &user
@@ -105,14 +105,14 @@ func addTask() *db.Task {
 		UserID: &userPathTestUser.ID,
 		Created: db.GetParsedTime(time.Now()),
 	}
-	if err := db.Mysql.Insert(&t); err != nil {
+	if err := db.Sql.Insert(&t); err != nil {
 		fmt.Println(err)
 	}
 	return &t
 }
 
 func deleteObject(i interface{}) {
-	_, err := db.Mysql.Delete(i)
+	_, err := db.Sql.Delete(i)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -126,7 +126,7 @@ func addToken(tok string, user int) {
 		UserID:  user,
 		Expired: false,
 	}
-	if err := db.Mysql.Insert(&token); err != nil {
+	if err := db.Sql.Insert(&token); err != nil {
 		fmt.Println(err)
 	}
 }

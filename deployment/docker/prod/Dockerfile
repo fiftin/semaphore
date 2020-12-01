@@ -6,7 +6,7 @@ LABEL maintainer="Tom Whiston <tom.whiston@gmail.com>"
 COPY ./ /go/src/github.com/ansible-semaphore/semaphore
 WORKDIR /go/src/github.com/ansible-semaphore/semaphore
 
-RUN apk add --no-cache -U libc-dev curl nodejs npm git && \
+RUN apk add --no-cache -U libc-dev curl nodejs npm git gcc musl-dev && \
   ./deployment/docker/prod/bin/install
 
 # Uses frolvlad alpine so we have access to glibc which is needed for golang

@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"github.com/lib/pq"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -39,16 +38,6 @@ func (version *Version) CheckExists() (bool, error) {
 				panic(err)
 			}
 
-			return version.CheckExists()
-		case *pq.Error:
-			if err.(*pq.Error).Code != "42P01" {
-				return false, err
-			}
-
-			fmt.Println("Creating migrations table")
-			if _, err = Sql.Exec(PrepareMigration(initialSQL)); err != nil {
-				panic(err)
-			}
 			return version.CheckExists()
 		default:
 			return false, err

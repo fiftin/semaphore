@@ -6,7 +6,6 @@ import (
 	"github.com/ansible-semaphore/semaphore/util"
 	"github.com/go-gorp/gorp/v3"
 	_ "github.com/go-sql-driver/mysql" // imports mysql driver
-	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 	"regexp"
 	"time"
